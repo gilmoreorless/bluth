@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <script src="../bluth.js"></script>
+        <script>
+            var cl = bluth('http://blah')
+            cl.addPath('notes', '/notes', ['get', 'post', 'blah'])
+            cl.notes.get(function (data) {
+                console.log('cl.notes.get', data);
+            })
+            cl.notes.get('params', function (data) {
+                console.log('cl.notes.get', data);
+            })
+        </script>
+    </body>
+</html>

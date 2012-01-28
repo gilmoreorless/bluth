@@ -1,0 +1,18 @@
+// All REST calls to the server.
+rest: {
+	// Basic implementations, replacing current send[Type]RequestToJira methods
+	get: function (args...) {},
+	post: function (args...) {},
+	delete: function (args...) {},
+
+	// Action-specific methods that end up calling the 3 methods above
+	// Random idea: maybe the basic ones that don't need customisation could effectively be defined by a sort of factory method
+	//  e.g. bonfire.rest.define('variables', ['get', 'post'], '/variables/{server.username}')
+	variables: {
+		get: function (callback) {},
+		post: function (variables, callback) {}
+	},
+	.
+	.
+	.
+},
