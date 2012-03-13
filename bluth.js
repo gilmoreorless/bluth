@@ -1,18 +1,17 @@
+/***** WARNING: This is very unfinished code *****/
+
 ;(function (global, undefined) {
     var allowedMethods = {'get':1, 'post':1, 'put':1, 'delete':1}
     var bluthMethods = {}
     bluthMethods.get = function (params, callback) {
         if (arguments.length < 2 && typeof params == 'function') {
             callback = params;
-            params = null;
+            params = undefined;
         }
         // TODO: This needs to support custom transports
         var transport = bluth.transports[bluth.defaultTransport],
             url = this.getUrl();
-        return transport.send(url, 'get', null, params, callback);
-//        if (callback) {
-//            callback(params);
-//        }
+        return transport.send(url, 'GET', null, params, callback);
     }
     function methodFactory(method) {
         return function (data, params, callback) {
@@ -21,12 +20,11 @@
                 data = null;
             } else if (arguments.length < 3 && typeof params == 'function') {
                 callback = params;
-                params = null;
+                params = undefined;
             }
             var transport = bluth.transports[bluth.defaultTransport],
                 url = this.getUrl();
-            return transport.send(url, method, data, params, callback);
-//            callback(data, params);
+            return transport.send(url, method.toUpperCase(), data, params, callback);
         }
     }
     bluthMethods.post = methodFactory('post');
@@ -47,6 +45,9 @@
     
     function BluthPath(client, path, methods) {
         methods || (methods = ['get']);
+        if (Object.prototype.toString.call(methods) != '[object Array]') {
+            methods = [methods];
+        }
         this._client = client;
         this._path = path || '';
         this._methods = methods;
@@ -54,6 +55,9 @@
         methods.forEach(function (method) {
             method = method.toLowerCase();
             if (allowedMethods.hasOwnProperty(method)) {
+                if (method == 'delete') {
+                    method = 'del'; // `delete` is a reserved keyword
+                }
                 self[method] = bluthMethods[method];
             }
         })

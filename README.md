@@ -44,8 +44,8 @@ The `get()` method has a slightly different function signature from the others.
     restClient[endpointName].post();
 
     restClient[endpointName].put(data, urlParams, callback);
-    restClient[endpointName].delete(data, urlParams, callback);
-    // Variations for .put() and .delete() are the same as for .post()
+    restClient[endpointName].del(data, urlParams, callback);
+    // Variations for .put() and .del() are the same as for .post()
 
 All parameters are all optional.
 

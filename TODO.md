@@ -22,4 +22,5 @@
 ## V3
 
 * Define sub-mappers (eg. /templates/{id}/favourites)
+* Per-path transports
 * Node.js support
