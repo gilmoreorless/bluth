@@ -80,15 +80,22 @@
     
 })(this);
 
+/** Transport: jQuery **/
 (function (global, bluth, undefined) {
     bluth.addTransport('jquery', {
-        // What goes here?
         send: function (url, method, data, params, callback) {
-            // params?
+            if (params) {
+                if (typeof params !== 'string') {
+                    params = jQuery.param(params);
+                }
+                url += (/\?/.test(url) ? '&' : '?') + params;
+            }
             var xhr = jQuery.ajax({
+                url: url,
                 type: method,
                 data: data
-            }).success(callback)
+            }).success(callback);
+            return xhr;
         }
     });
 })(this, this.bluth);

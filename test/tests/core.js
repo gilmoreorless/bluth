@@ -1,3 +1,5 @@
+(function () {
+
 var baseUrl = 'http://example.com',
     defaultTransport = bluth.defaultTransport;
 
@@ -428,3 +430,5 @@ test('data + params + callback', 7, function () {
     
     equal(this.client.unit.del(testData, testParams, testFunc), 'DELETEdata+params+callback', 'Return value of transport is passed along');
 });
+
+})(); // File-wide closure
