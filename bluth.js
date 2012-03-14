@@ -8,8 +8,7 @@
             callback = params;
             params = undefined;
         }
-        // TODO: This needs to support custom transports
-        var transport = bluth.transports[bluth.defaultTransport],
+        var transport = this.getTransport(),
             url = this.getUrl();
         return transport.send(url, 'GET', null, params, callback);
     }
@@ -22,7 +21,7 @@
                 callback = params;
                 params = undefined;
             }
-            var transport = bluth.transports[bluth.defaultTransport],
+            var transport = Bluth.transports[Bluth.defaultTransport],
                 url = this.getUrl();
             return transport.send(url, method.toUpperCase(), data, params, callback);
         }
@@ -33,7 +32,7 @@
     
     function BluthClient(serverUrl, transport) {
         this._serverUrl = serverUrl;
-        this._transport = transport || bluth.defaultTransport;
+        this._transport = transport || Bluth.defaultTransport;
     }
     
     BluthClient.prototype.addPath = function (name, path, methods) {
@@ -63,26 +62,30 @@
         })
     }
     
+    BluthPath.prototype.getTransport = function () {
+        return Bluth.transports[this._client._transport];
+    }
+    
     BluthPath.prototype.getUrl = function () {
         return this._client._serverUrl + this._path;
     }
     
-    var bluth = global.bluth = function (serverUrl, transport) {
+    var Bluth = global.Bluth = function (serverUrl, transport) {
         return new BluthClient(serverUrl, transport);
     }
     
-    bluth.transports = {};
-    bluth.defaultTransport = '';
-    bluth.addTransport = function (name, definition) {
-        bluth.transports[name] = definition;
-        bluth.defaultTransport || (bluth.defaultTransport = name);
+    Bluth.transports = {};
+    Bluth.defaultTransport = '';
+    Bluth.addTransport = function (name, definition) {
+        Bluth.transports[name] = definition;
+        Bluth.defaultTransport || (Bluth.defaultTransport = name);
     }
     
 })(this);
 
 /** Transport: jQuery **/
 (function (global, bluth, undefined) {
-    bluth.addTransport('jquery', {
+    Bluth.addTransport('jquery', {
         send: function (url, method, data, params, callback) {
             if (params) {
                 if (typeof params !== 'string') {

@@ -1,4 +1,4 @@
-## V1
+## V1 (DONE)
 
 * Basic factory object
   * Input: server, URL prefix
@@ -22,5 +22,5 @@
 ## V3
 
 * Define sub-mappers (eg. /templates/{id}/favourites)
-* Per-path transports
+* Per-path transports?
 * Node.js support

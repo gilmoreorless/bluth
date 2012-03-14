@@ -6,12 +6,18 @@ This is still a work in progress, more functionality and flexibility will be add
 
 ## Create a new REST client
 
-    var restClient = bluth(serverUrl);
+    var restClient = Bluth(serverUrl);
+    // OR
+    var restClient = new Bluth(serverUrl);
+
+The `new` keyword is optional when creating a Bluth client.
 
 ## Pick a transport method
 
 Technically Bluth is library-independent, but for the purposes of quick development,
 currently jQuery is the only transport defined - more will be coming.
+
+TODO: More details about transports
 
 ## Define REST endpoints
 
@@ -26,7 +32,10 @@ The property is also returned by the function, so you can assign it to a variabl
 Example:
 
     var family = restClient.addPath('family', '/rest/1/family', ['get', 'post', 'delete']);
-    // restClient now has a "family" property that contains the "get", "post" and "delete" functions
+    // restClient now has a "family" property that contains the "get", "post" and "del" functions
+
+**NOTE:** Due to `delete` being a reserved keyword in JS, the DELETE method maps to the `.del()` function,
+while GET, POST and PUT are more normal and correspond to the `.get()`, `.post()` and `.put()` functions respectively.
 
 ## Call endpoint methods
 

@@ -1,61 +1,69 @@
 (function () {
 
 var baseUrl = 'http://example.com',
-    defaultTransport = bluth.defaultTransport;
+    defaultTransport = Bluth.defaultTransport;
 
 
 
 module('client constructor');
 
 test('with new keyword', 2, function () {
-    var client = new bluth(baseUrl);
+    var client = new Bluth(baseUrl);
     equal(client._serverUrl, baseUrl, 'Has correct URL');
-    equal(client._transport, bluth.defaultTransport, 'Has default transport');
+    equal(client._transport, Bluth.defaultTransport, 'Has default transport');
 });
 
 test('without new keyword', 2, function () {
-    var client = bluth(baseUrl);
+    var client = Bluth(baseUrl);
     equal(client._serverUrl, baseUrl, 'Has correct URL');
-    equal(client._transport, bluth.defaultTransport, 'Has default transport');
+    equal(client._transport, Bluth.defaultTransport, 'Has default transport');
 });
 
 test('define a transport', 1, function () {
-    var client = bluth(baseUrl, 'qunit');
+    var client = Bluth(baseUrl, 'qunit');
     equal(client._transport, 'qunit', 'Saves custom transport');
 });
 
 
 
-module('addTransport', {
+module('addTransport / getTransport', {
     teardown: function () {
-        bluth.defaultTransport = defaultTransport;
+        Bluth.defaultTransport = defaultTransport;
     }
 });
 
 test('set default', 2, function () {
-    bluth.defaultTransport = '';
-    bluth.addTransport('qunit', {});
-    ok('qunit' in bluth.transports, 'Transport in list');
-    equal(bluth.defaultTransport, 'qunit', 'First transport set to default');
+    Bluth.defaultTransport = '';
+    Bluth.addTransport('qunit', {});
+    ok('qunit' in Bluth.transports, 'Transport in list');
+    equal(Bluth.defaultTransport, 'qunit', 'First transport set to default');
 
     // Cleanup
-    delete bluth.transports.qunit;
+    delete Bluth.transports.qunit;
 });
 
-test('another transport', 2, function () {
-    bluth.addTransport('qunit2', {});
-    ok('qunit2' in bluth.transports, 'Transport in list');
-    notEqual(bluth.defaultTransport, 'qunit2', 'Subsequent transport not set to default');
+test('another transport', 4, function () {
+    var transport = {send: function(){}}
+    Bluth.addTransport('qunit2', transport);
+    ok('qunit2' in Bluth.transports, 'Transport in list');
+    notEqual(Bluth.defaultTransport, 'qunit2', 'Subsequent transport not set to default');
+
+    var client1 = Bluth(baseUrl);
+    client1.addPath('path');
+    notEqual(client1.path.getTransport(), transport, 'path1.getTransport() returns default transport');
+    var client2 = Bluth(baseUrl, 'qunit2');
+    client2.addPath('path');
+    strictEqual(client2.path.getTransport(), transport, 'path2.getTransport() returns custom transport');
 
     // Cleanup
-    delete bluth.transports.qunit2;
+    delete Bluth.transports.qunit2;
 });
 
 
 
 module('path constructor', {
     setup: function () {
-        this.client = bluth(baseUrl);
+        this.client = Bluth(baseUrl);
     }
 });
 
@@ -113,21 +121,21 @@ test('verb (array)', 4, function () {
 
 module('GET', {
     setup: function () {
-        bluth.defaultTransport = 'gettest';
+        Bluth.defaultTransport = 'gettest';
 
-        this.client = bluth(baseUrl);
+        this.client = Bluth(baseUrl);
         this.client.addPath('unit', '/unit', 'GET');
         this.testUrl = baseUrl + '/unit';
     },
     teardown: function () {
-        bluth.defaultTransport = defaultTransport;
-        delete bluth.transports.gettest;
+        Bluth.defaultTransport = defaultTransport;
+        delete Bluth.transports.gettest;
     }
 });
 
 test('invalid transport', 1, function () {
-    bluth.addTransport('invalid', {});
-    bluth.defaultTransport = 'invalid';
+    Bluth.addTransport('invalid', {});
+    Bluth.defaultTransport = 'invalid';
 
     var client = this.client;
     raises(function () {
@@ -135,12 +143,12 @@ test('invalid transport', 1, function () {
     }, TypeError, 'Invalid transport raises a TypeError');
 
     // Cleanup
-    delete bluth.transports.invalid;
+    delete Bluth.transports.invalid;
 });
 
 test('no args', 6, function () {
     var test = this;
-    bluth.addTransport('gettest', {
+    Bluth.addTransport('gettest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'GET', 'GET method is sent to transport');
@@ -156,7 +164,7 @@ test('no args', 6, function () {
 
 test('string params', 6, function () {
     var test = this;
-    bluth.addTransport('gettest', {
+    Bluth.addTransport('gettest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'GET', 'GET method is sent to transport');
@@ -173,7 +181,7 @@ test('string params', 6, function () {
 test('object params', 6, function () {
     var test = this,
         testParams = {type: 'object'};
-    bluth.addTransport('gettest', {
+    Bluth.addTransport('gettest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'GET', 'GET method is sent to transport');
@@ -192,7 +200,7 @@ test('callback, no params', 7, function () {
         testFunc = function () {
             ok(true, 'Callback is called');
         };
-    bluth.addTransport('gettest', {
+    Bluth.addTransport('gettest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'GET', 'GET method is sent to transport');
@@ -213,7 +221,7 @@ test('callback, with params', 7, function () {
         testFunc = function () {
             ok(true, 'Callback is called');
         };
-    bluth.addTransport('gettest', {
+    Bluth.addTransport('gettest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'GET', 'GET method is sent to transport');
@@ -232,21 +240,21 @@ test('callback, with params', 7, function () {
 
 module('POST', {
     setup: function () {
-        bluth.defaultTransport = 'posttest';
+        Bluth.defaultTransport = 'posttest';
 
-        this.client = bluth(baseUrl);
+        this.client = Bluth(baseUrl);
         this.client.addPath('unit', '/unit', 'POST');
         this.testUrl = baseUrl + '/unit';
     },
     teardown: function () {
-        bluth.defaultTransport = defaultTransport;
-        delete bluth.transports.posttest;
+        Bluth.defaultTransport = defaultTransport;
+        delete Bluth.transports.posttest;
     }
 });
 
 test('invalid transport', 1, function () {
-    bluth.addTransport('invalid', {});
-    bluth.defaultTransport = 'invalid';
+    Bluth.addTransport('invalid', {});
+    Bluth.defaultTransport = 'invalid';
 
     var client = this.client;
     raises(function () {
@@ -254,12 +262,12 @@ test('invalid transport', 1, function () {
     }, TypeError, 'Invalid transport raises a TypeError');
 
     // Cleanup
-    delete bluth.transports.invalid;
+    delete Bluth.transports.invalid;
 });
 
 test('no args', 6, function () {
     var test = this;
-    bluth.addTransport('posttest', {
+    Bluth.addTransport('posttest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'POST', 'POST method is sent to transport');
@@ -276,7 +284,7 @@ test('no args', 6, function () {
 test('data only', 6, function () {
     var test = this,
         testData = {name: 'George-Michael'};
-    bluth.addTransport('posttest', {
+    Bluth.addTransport('posttest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'POST', 'POST method is sent to transport');
@@ -295,7 +303,7 @@ test('callback, no params, no data', 7, function () {
         testFunc = function () {
             ok(true, 'Callback is called');
         };
-    bluth.addTransport('posttest', {
+    Bluth.addTransport('posttest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'POST', 'POST method is sent to transport');
@@ -316,7 +324,7 @@ test('data + callback, no params', 7, function () {
         testFunc = function () {
             ok(true, 'Callback is called');
         };
-    bluth.addTransport('posttest', {
+    Bluth.addTransport('posttest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'POST', 'POST method is sent to transport');
@@ -338,7 +346,7 @@ test('data + params + callback', 7, function () {
         testFunc = function () {
             ok(true, 'Callback is called');
         };
-    bluth.addTransport('posttest', {
+    Bluth.addTransport('posttest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'POST', 'POST method is sent to transport');
@@ -357,15 +365,15 @@ test('data + params + callback', 7, function () {
 
 module('PUT', {
     setup: function () {
-        bluth.defaultTransport = 'puttest';
+        Bluth.defaultTransport = 'puttest';
 
-        this.client = bluth(baseUrl);
+        this.client = Bluth(baseUrl);
         this.client.addPath('unit', '/unit', 'PUT');
         this.testUrl = baseUrl + '/unit';
     },
     teardown: function () {
-        bluth.defaultTransport = defaultTransport;
-        delete bluth.transports.puttest;
+        Bluth.defaultTransport = defaultTransport;
+        delete Bluth.transports.puttest;
     }
 });
 
@@ -377,7 +385,7 @@ test('data + params + callback', 7, function () {
         testFunc = function () {
             ok(true, 'Callback is called');
         };
-    bluth.addTransport('puttest', {
+    Bluth.addTransport('puttest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'PUT', 'PUT method is sent to transport');
@@ -396,15 +404,15 @@ test('data + params + callback', 7, function () {
 
 module('DELETE', {
     setup: function () {
-        bluth.defaultTransport = 'deletetest';
+        Bluth.defaultTransport = 'deletetest';
 
-        this.client = bluth(baseUrl);
+        this.client = Bluth(baseUrl);
         this.client.addPath('unit', '/unit', 'DELETE');
         this.testUrl = baseUrl + '/unit';
     },
     teardown: function () {
-        bluth.defaultTransport = defaultTransport;
-        delete bluth.transports.puttest;
+        Bluth.defaultTransport = defaultTransport;
+        delete Bluth.transports.puttest;
     }
 });
 
@@ -416,7 +424,7 @@ test('data + params + callback', 7, function () {
         testFunc = function () {
             ok(true, 'Callback is called');
         };
-    bluth.addTransport('deletetest', {
+    Bluth.addTransport('deletetest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');
             equal(method, 'DELETE', 'DELETE method is sent to transport');

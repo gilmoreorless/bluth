@@ -13,14 +13,11 @@ module('transports.jquery', {
 			requests.push(xhr);
 		}
 
-		this.defaultTransport = bluth.defaultTransport;
-		bluth.defaultTransport = 'jquery';
-		this.client = bluth(baseUrl);
+		this.client = Bluth(baseUrl, 'jquery');
 		this.client.addPath('jquery', basePath, ['get', 'post', 'put', 'delete']);
 	},
 	teardown: function () {
 		this.xhr.restore();
-		bluth.defaultTransport = this.defaultTransport;
 		delete this.client;
 	}
 });
