@@ -1,5 +1,8 @@
-/***** WARNING: This is very unfinished code *****/
-
+/*!
+ * Bluth.js v0.1.0 - a simple REST client with resource mappings
+ * https://github.com/gilmoreorless/bluth
+ * Open source under the MIT licence: http://gilmoreorless.mit-license.org/
+ */
 ;(function (global, undefined) {
     var allowedMethods = {'get':1, 'post':1, 'put':1, 'del':1}
     var bluthMethods = {}
@@ -73,6 +76,7 @@
     var Bluth = global.Bluth = function (serverUrl, transport) {
         return new BluthClient(serverUrl, transport);
     }
+    Bluth.version = '0.1.0';
     
     Bluth.transports = {};
     Bluth.defaultTransport = '';
