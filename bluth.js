@@ -1,7 +1,7 @@
 /***** WARNING: This is very unfinished code *****/
 
 ;(function (global, undefined) {
-    var allowedMethods = {'get':1, 'post':1, 'put':1, 'delete':1}
+    var allowedMethods = {'get':1, 'post':1, 'put':1, 'del':1}
     var bluthMethods = {}
     bluthMethods.get = function (params, callback) {
         if (arguments.length < 2 && typeof params == 'function') {
@@ -53,10 +53,10 @@
         var self = this;
         methods.forEach(function (method) {
             method = method.toLowerCase();
+            if (method == 'delete') {
+                method = 'del'; // `delete` is a reserved keyword
+            }
             if (allowedMethods.hasOwnProperty(method)) {
-                if (method == 'delete') {
-                    method = 'del'; // `delete` is a reserved keyword
-                }
                 self[method] = bluthMethods[method];
             }
         })
