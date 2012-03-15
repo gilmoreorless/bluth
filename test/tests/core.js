@@ -283,7 +283,7 @@ test('no args', 6, function () {
 
 test('data only', 6, function () {
     var test = this,
-        testData = {name: 'George-Michael'};
+        testData = {name: 'George Michael'};
     Bluth.addTransport('posttest', {
         send: function (url, method, data, params, callback) {
             equal(url, test.testUrl, 'Correct URL is sent to transport');

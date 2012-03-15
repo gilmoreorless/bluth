@@ -15,12 +15,13 @@
 
 * Variable replacement in mapper URLs (eg. /templates/{id})
 * Allow customisation of URLs for specific mapper REST types (eg. GET has different requirements)
-* Default options that are passed to transports (eg. contentType: 'application/json')
+* Default options/headers that are passed to transports (eg. contentType: 'application/json')
+* CORS support (requires custom header feature)
 * Error handlers - per server, mapper or request type
-* Make sure to handle CORS
 
 ## V3
 
 * Define sub-mappers (eg. /templates/{id}/favourites)
 * Per-path transports?
 * Node.js support
+* Support for switching servers (edge case, but needed)

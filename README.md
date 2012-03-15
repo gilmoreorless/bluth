@@ -1,8 +1,10 @@
 # Bluth.js
 
-Give your JS *a RESTed development*
+Give your JS *a RESTed development* ([huh?](http://en.wikipedia.org/wiki/Arrested_Development_%28TV_series%29))
 
-This is still a work in progress, more functionality and flexibility will be added soon.
+Bluth is a lightweight REST client that maps server-side REST resources to simple JavaScript objects.
+
+Bluth is currently very basic and is still a work in progress. More functionality and flexibility will be added soon.
 
 ## Create a new REST client
 
@@ -14,14 +16,16 @@ The `new` keyword is optional when creating a Bluth client.
 
 ## Pick a transport method
 
-Technically Bluth is library-independent, but for the purposes of quick development,
-currently jQuery is the only transport defined - more will be coming.
+In order to send REST requests to the server, you need to define an AJAX transport.
 
-TODO: More details about transports
+Bluth has no AJAX built-in AJAX capabilities, instead preferring to piggyback off other well-defined AJAX libraries.
+This allows Bluth to remain lightweight and flexible, meaning it will play nicely with other frameworks and libraries.
+
+In this initial quick development stage, jQuery is the only transport method defined by default, but more will be coming.
 
 ## Define REST endpoints
 
-    var restPath = restClient.addPath(endpointName, endpointPath, methods);
+    restClient.addPath(endpointName, endpointPath, methods);
 
 `methods` is an optional array of HTTP methods to define (GET, POST, etc) - if missing
 it defaults to 'get'
@@ -45,6 +49,7 @@ The `get()` method has a slightly different function signature from the others.
 
     restClient[endpointName].get(urlParams, callback);
     restClient[endpointName].get(callback);
+    restClient[endpointName].get(); // Valid, but why would you do a GET without handling the response?
 
     restClient[endpointName].post(data, urlParams, callback);
     restClient[endpointName].post(data, callback);
