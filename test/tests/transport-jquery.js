@@ -27,8 +27,6 @@ test('GET basic', 4, function () {
 	ok('complete' in request, 'Initial call returns a jQuery XHR object');
 	var xhr = this.requests[0];
 
-	console.log(xhr);
-
 	equal(xhr.method, 'GET', 'XHR method is GET');
 	equal(xhr.url, fullUrl, 'XHR has correct URL');
 	equal(xhr.requestBody, null, 'XHR GET has no body content');
@@ -54,7 +52,6 @@ test('GET full (object params)', 4, function () {
 	var paramsObj = {location: 'jail'};
 	var expectedResponse = 'Escape';
 	var request = this.client.jquery.get(paramsObj, function (response) {
-		console.log(arguments);
 		equal(response, expectedResponse, 'Correct response passed to callback');
 	});
 

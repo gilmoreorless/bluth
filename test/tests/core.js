@@ -412,7 +412,7 @@ module('DELETE', {
     },
     teardown: function () {
         Bluth.defaultTransport = defaultTransport;
-        delete Bluth.transports.puttest;
+        delete Bluth.transports.deletetest;
     }
 });
 
